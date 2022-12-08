@@ -1,0 +1,207 @@
+body {
+    overflow: hidden;
+}
+
+:root {
+    --darkblue: #0A1045;
+    --blue: #29959d;
+    --red: #a41b36;
+    --grey: #b0b3b8;
+    --best: rgb(47, 150, 144);
+}
+
+.main-container-game {
+    width: 100%;
+    height: 100vh;
+}
+
+.scoreboard {
+    width: 80%;
+    margin-left: 10%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.score-ind {
+    box-sizing: border-box;
+    width: 20%;
+    height: 5vh;
+    border-radius: 10px;
+    font-size: 200%;
+    text-align-last: justify;
+    padding-left: 20px;
+    padding-right: 20px;
+    border: 1px solid var(--best);
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
+
+.pt {
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
+
+.X-class {
+    margin-right: 15px;
+}
+
+.O-class {
+    margin-left: 15px;
+}
+
+.playerturn-div {
+    margin-top: 30px;
+    width: 80%;
+    margin-left: 10%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.playerturn {
+    font-size: 150%;
+}
+
+.game {
+    width: 60%;
+    margin-left: 20%;
+    display: flex;
+    flex-wrap: wrap;
+    height: 62vh;
+    justify-content: space-between;
+    align-content: space-between;
+    margin-top: 30px;
+    background-color: var(--best);
+}
+
+.box {
+    width: 33%;
+    height: 20vh;
+    border: none;
+    font-size: 500%;
+    margin: 1px;
+    background-color: white;
+}
+
+.box:disabled {
+    background-color: white;
+    color: black;
+}
+
+.title-gamemode {
+    text-align: center;
+    margin: 1%;
+    font-size: 400%;
+    font-family: 'Courier New', Courier, monospace;
+}
+
+.color-t {
+    color: rgb(47, 150, 144);
+}
+
+.gamemode {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 30vh;
+    justify-content: center;
+    align-items: center;
+}
+
+.btn-gamemode {
+    width: 50%;
+    height: 5vh;
+    background-color:rgb(47, 150, 144);
+    border: none;
+    color: white;
+    font-size: 150%;
+    border-radius: 10px;
+    margin-top: 20px;
+}
+
+.btn-join-create {
+    width: 15%;
+    height: 5vh;
+    background-color:rgb(47, 150, 144);
+    border: none;
+    color: white;
+    font-size: 150%;
+    border-radius: 10px;
+    margin-top: 20px;
+}
+
+.link-gamemode {
+    display: flex;
+    text-decoration: none;
+    margin: 1%;
+    justify-content: center;
+    width: 20%;
+}
+
+.rooms-t {
+    font-size: 400%;
+    font-family: 'Courier New', Courier, monospace;
+}
+
+.main-container-room {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.input-room {
+    border-radius: 10px;
+    border: 2px var(--best)  solid;
+    width: 15%;
+    height: 4vh;
+    text-align: center;
+    text-transform: uppercase;
+    font-size: 150%;
+}
+
+.btn-exit {
+    position: absolute;
+    top: 15px;
+    left: 10px;
+}
+
+.link-exit {
+    text-decoration: none;
+    font-size: 200%;
+    background-color: var(--best);
+    color: white;
+    padding: 10px;
+    border-radius: 10px;
+}
+
+.new-game {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    margin-top: 30px;
+}
+
+.new-game-btn {
+    width: 15%;
+    background-color: var(--best);
+    border: none;
+    color: white;
+    font-size: 250%;
+    border-radius: 20px;
+}
+
+.who-won {
+    display: flex;
+    width: 100%;
+    font-size: 300%;
+    justify-content: center;
+    margin-top: 30px;
+}
+
+.code-room {
+    font-size: 200%;
+    position: absolute;
+    top: 100px;
+    left: 10px;
+}
