@@ -74,17 +74,14 @@ function Singleplayer() {
                 <div className='playerturn' ><span className='pt' >{playerTurn.current}</span> Turn</div>
             </div>
             <div className='game'>
-                <XoBox whoWon={whoWon} onChange={() => handleBoxChange(0)} value={gameState[0]} />
-                <XoBox whoWon={whoWon} onChange={() => handleBoxChange(1)} value={gameState[1]} />
-                <XoBox whoWon={whoWon} onChange={() => handleBoxChange(2)} value={gameState[2]} />
-                
-                <XoBox whoWon={whoWon} onChange={() => handleBoxChange(3)} value={gameState[3]} />
-                <XoBox whoWon={whoWon} onChange={() => handleBoxChange(4)} value={gameState[4]} />
-                <XoBox whoWon={whoWon} onChange={() => handleBoxChange(5)} value={gameState[5]} />
-                
-                <XoBox whoWon={whoWon} onChange={() => handleBoxChange(6)} value={gameState[6]} />
-                <XoBox whoWon={whoWon} onChange={() => handleBoxChange(7)} value={gameState[7]} />
-                <XoBox whoWon={whoWon} onChange={() => handleBoxChange(8)} value={gameState[8]} />
+                {gameState.map((value, index) => (
+                    <XoBox
+                        key={index}
+                        whoWon={whoWon}
+                        onChange={() => handleBoxChange(index)}
+                        value={value}
+                    />
+                ))}
             </div>
             <div className='new-game' >
                 <button onClick={() => restartGame()} className="new-game-btn" >NEW GAME</button>

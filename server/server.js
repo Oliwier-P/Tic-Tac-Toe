@@ -12,9 +12,9 @@ const io = new Server(server, {
 })
 
 io.on('connection', (socket) => {
-    console.log("dziala");
     socket.on('updateGameState', (data) => {
         socket.to(data.roomCode).emit('retGameState', {receiveNewGameState: data.newGameState,receivePlayerTurn: data.playerTurn,receiveWhoWon: data.whoWon})
+        console.log(`user ${data.Turn} sent ${data.newGameState} to ${data.roomCode}`);
     });
 
     socket.on('join_room', (data) => {
