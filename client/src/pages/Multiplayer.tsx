@@ -21,6 +21,7 @@ const WINNING_COMBINATIONS = [
 function Multiplayer() {
     const defaultGameState:GameState = ['','','','','','','','',''];
     const [gameState, setGameState] = useState<GameState>(defaultGameState);
+    const user = useRef("");
     const playerTurn = useRef<PlayerTurn>('X');     
     const [whoWon, setwhoWon] = useState<PlayerTurn | null>(null);   
     const [scoreX, setScoreX] = useState(0);
@@ -28,30 +29,31 @@ function Multiplayer() {
     const [inroom, setInroom] = useState<boolean>(false);
     const [roomCode, setRoomCode] = useState<string>();
 
-    // click box
+    // change game board and data
     const handleBoxChange = (boxIndex:number) => {
-        const newGameState = gameState.map((element, index) => {
-            return index === boxIndex ? playerTurn.current : element;
-        })
-        
-        const Turn = playerTurn.current === 'X' ? 'O' : 'X';
+        if(user.current === playerTurn.current && !whoWon && gameState[boxIndex] === ''){
+            const newGameState = gameState.map((element, index) => {
+                return index === boxIndex ? playerTurn.current : element;
+            })
 
-        socket.emit('updateGameState', {roomCode, newGameState, Turn, whoWon});
+            const Turn = playerTurn.current === 'X' ? 'O' : 'X';
 
-        setGameState(newGameState);
+            socket.emit('updateGameState', {roomCode, newGameState, Turn});
 
-        if(checkWin(newGameState, playerTurn.current)){
-            setwhoWon(playerTurn.current)
-            if(playerTurn.current === "X"){
-                setScoreX(scoreX + 1);
-            }
-            else {
-                setScoreO(scoreO + 1);
+            if(checkWin(newGameState, playerTurn.current)){
+                if(playerTurn.current === "X"){
+                    setScoreX(scoreX + 1);
+                }
+                else {
+                    setScoreO(scoreO + 1);
+                }
+                const Turn = playerTurn.current;
+                socket.emit("whoWon", {roomCode, Turn, scoreX, scoreO});
             }
         }
     }
     
-    // check win
+    // check win, if there is a combination of winning combinations
     const checkWin = (gameState:GameState, playerTurns:PlayerTurn) => {
         return WINNING_COMBINATIONS.some(combination => {
             return combination.every(index => {
@@ -63,8 +65,7 @@ function Multiplayer() {
 
     // restart game, clear board and start new game
     const restartGame = () => {
-        setGameState(defaultGameState);
-        setwhoWon(null);
+        socket.emit("restartGame", roomCode);
     }
 
     // create room
@@ -73,6 +74,7 @@ function Multiplayer() {
         const randroomcode = (Math.round(Math.random() * (90000 - 10000) + 10000).toString());
         setRoomCode(randroomcode);
         socket.emit('join_room', randroomcode)
+        user.current = "X";
     }
 
     // join room
@@ -80,15 +82,29 @@ function Multiplayer() {
         if(roomCode !== '' ){
             socket.emit('join_room', roomCode)
             setInroom(true)
+            user.current = "O";
         }
     }
 
     useEffect(() => {
+        // game board and player turn
         socket.on('retGameState', (data) => {
             setGameState(data.receiveNewGameState);
-            setwhoWon(data.receiveWhoWon);
-            console.log(data.receiveTurn);
+            playerTurn.current = data.receivePlayerTurn;
         })
+
+        // restart game
+        socket.on("retRestartGame", () => {
+            setGameState(defaultGameState);
+            setwhoWon(null);
+        });
+
+        // set who won and score
+        socket.on("retWhoWon", data => {
+            setwhoWon(data.winner);
+            setScoreX(data.Xscore);
+            setScoreO(data.Oscore);
+        });
     }, [])
 
     return (
@@ -106,8 +122,8 @@ function Multiplayer() {
         </div>}
         {inroom && <div className='main-container-game'>
             <div className='scoreboard'>
-                <div className='score-ind X-class' >{`X ${scoreX}`}</div>
-                <div className='score-ind O-class' >{`O ${scoreO}`}</div>
+                <div className='score-ind X-class' >{user.current == "X" ? `X(You) ${scoreX}` : `X ${scoreX}`}</div>
+                <div className='score-ind O-class' >{user.current == "O" ? `O(You) ${scoreO}` : `O ${scoreO}`}</div>
             </div>
             <div className='playerturn-div'>
                 <div className='playerturn' ><span className='pt' >{playerTurn.current}</span> Turn</div>

@@ -12,11 +12,22 @@ const io = new Server(server, {
 })
 
 io.on('connection', (socket) => {
+    // main game data
     socket.on('updateGameState', (data) => {
-        socket.to(data.roomCode).emit('retGameState', {receiveNewGameState: data.newGameState,receivePlayerTurn: data.playerTurn,receiveWhoWon: data.whoWon})
-        console.log(`user ${data.Turn} sent ${data.newGameState} to ${data.roomCode}`);
+        socket.nsp.to(data.roomCode).emit('retGameState', {receiveNewGameState: data.newGameState, receivePlayerTurn: data.Turn});
     });
 
+    // restart game
+    socket.on("restartGame", (data) => {
+        socket.nsp.to(data).emit("retRestartGame");
+    });
+
+    // set winner
+    socket.on("whoWon", (data) => {
+        socket.nsp.to(data.roomCode).emit("retWhoWon", {winner: data.Turn, Xscore: data.scoreX, Oscore: data.scoreO});
+    });
+
+    // join room
     socket.on('join_room', (data) => {
         socket.join(data)
         console.log(`user ${socket.id} connected to ${data}`);
@@ -24,5 +35,5 @@ io.on('connection', (socket) => {
 })
 
 server.listen(3000, () => {
-    console.log('serwer cię słyszy')
+
 });
