@@ -1,0 +1,20 @@
+@use "../../../style.scss" as mixins;
+
+.form_container {
+  width: 100%;
+
+  margin-top: 120px;
+
+  justify-content: center;
+
+  .form {
+    width: 320px;
+
+    flex-wrap: wrap;
+    justify-content: space-between;
+
+    button {
+      @include mixins.button_style();
+    }
+  }
+}

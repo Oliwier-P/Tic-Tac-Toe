@@ -1,0 +1,9 @@
+@use "../../../style.scss" as mixins;
+
+.mode_container {
+  @include mixins.buttons_container();
+
+  button {
+    @include mixins.button_style();
+  }
+}
