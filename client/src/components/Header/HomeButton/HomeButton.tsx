@@ -1,6 +1,6 @@
 import "./HomeButtonStyle.scss";
 
-import home from "../../assets/home.svg";
+import home from "../../../assets/home.svg";
 
 export function HomeButton() {
   return (

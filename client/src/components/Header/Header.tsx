@@ -1,7 +1,7 @@
 import "./HeaderStyle.scss";
 
-import { HomeButton } from "../HomeButton/HomeButton";
-import { Title } from "../Title/Title";
+import { HomeButton } from "./HomeButton/HomeButton";
+import { Title } from "./Title/Title";
 
 export function Header() {
   return (
