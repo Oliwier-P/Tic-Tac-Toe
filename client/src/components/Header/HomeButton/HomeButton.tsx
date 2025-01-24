@@ -1,10 +1,15 @@
 import "./HomeButtonStyle.scss";
 
 import home from "../../../assets/home.svg";
+import { ButtonsContainerType } from "../../../types/ButtonsContainersType";
 
-export function HomeButton() {
+type HomeButtonProps = {
+  onClick: (value: ButtonsContainerType) => void;
+};
+
+export function HomeButton({ onClick }: HomeButtonProps) {
   return (
-    <button className="home_button">
+    <button className="home_button" onClick={() => onClick("MODE")}>
       <img src={home} />
     </button>
   );

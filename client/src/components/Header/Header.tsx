@@ -1,12 +1,18 @@
 import "./HeaderStyle.scss";
 
+import { ButtonsContainerType } from "../../types/ButtonsContainersType";
+
 import { HomeButton } from "./HomeButton/HomeButton";
 import { Title } from "./Title/Title";
 
-export function Header() {
+type HeaderProps = {
+  onClick: (value: ButtonsContainerType) => void;
+};
+
+export function Header({ onClick }: HeaderProps) {
   return (
     <div className="header flex">
-      <HomeButton />
+      <HomeButton onClick={onClick} />
       <Title />
     </div>
   );
