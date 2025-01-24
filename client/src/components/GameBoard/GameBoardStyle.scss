@@ -1,0 +1,15 @@
+.game_board {
+  width: 500px;
+  height: 500px;
+
+  box-sizing: border-box;
+
+  background-color: var(--home-button-bg);
+
+  border-radius: 20px;
+
+  flex-wrap: wrap;
+
+  justify-content: space-around;
+  align-items: center;
+}

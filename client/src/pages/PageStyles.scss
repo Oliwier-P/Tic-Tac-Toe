@@ -1,0 +1,12 @@
+.game_container {
+  position: relative;
+
+  flex-direction: column;
+  align-items: center;
+}
+
+.game_sub_container {
+  flex-wrap: wrap;
+
+  justify-content: center;
+}
