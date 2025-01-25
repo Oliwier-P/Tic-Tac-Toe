@@ -3,7 +3,7 @@ import "./GameBoardStyle.scss";
 
 export function GameBoard() {
   return (
-    <div className="game_board flex">
+    <div className="game_board">
       <Box />
       <Box />
       <Box />

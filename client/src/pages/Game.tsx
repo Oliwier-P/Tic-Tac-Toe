@@ -19,8 +19,9 @@ export function Game() {
       <Header onClick={handleHome} />
       <div className="game_container flex">
         <TurnContainer />
+        <GameBoard />
         <div className="game_sub_container flex">
-          <GameBoard />
+          <Scoreboard />
         </div>
       </div>
     </>

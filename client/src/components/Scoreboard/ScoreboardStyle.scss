@@ -1,7 +1,13 @@
 .scoreboard {
-  flex-direction: column;
+  flex-wrap: nowrap;
 
   div {
-    margin: 20px;
+    margin: 10px;
+  }
+
+  @media (max-width: 600px) {
+    div {
+      width: 120px;
+    }
   }
 }

@@ -1,6 +1,6 @@
 .game_board {
-  width: 500px;
-  height: 500px;
+  width: 400px;
+  height: 400px;
 
   box-sizing: border-box;
 
@@ -8,8 +8,8 @@
 
   border-radius: 20px;
 
-  flex-wrap: wrap;
-
-  justify-content: space-around;
-  align-items: center;
+  display: grid;
+  grid-template-columns: auto auto auto;
+  gap: 10px;
+  padding: 10px;
 }
