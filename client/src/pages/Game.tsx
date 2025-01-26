@@ -6,8 +6,12 @@ import { Header } from "../components/Header/Header";
 import { GameBoard } from "../components/GameBoard/GameBoard";
 import { TurnContainer } from "../components/TurnContainer/TurnContainer";
 import { Scoreboard } from "../components/Scoreboard/Scoreboard";
+import { useState } from "react";
 
 export function Game() {
+  // solo or onilne
+  const [mode, setMode] = useState<string>("SOLO");
+
   const navigate = useNavigate();
 
   const handleHome = () => {
