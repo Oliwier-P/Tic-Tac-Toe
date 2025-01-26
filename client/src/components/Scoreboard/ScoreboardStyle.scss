@@ -1,13 +1,41 @@
 .scoreboard {
-  flex-wrap: nowrap;
+  .roomCode {
+    width: 100%;
 
-  div {
-    margin: 10px;
+    color: var(--primary);
+
+    font-weight: bold;
+    font-size: 2rem;
   }
 
-  @media (max-width: 600px) {
+  div {
+    margin: 20px 10px 0px 10px;
+  }
+
+  @media (min-width: 651px) {
+    width: 200px;
+
+    flex-direction: column;
+    align-items: center;
+
+    margin-right: 50px;
+  }
+
+  @media (max-width: 650px) {
+    width: 400px;
+
+    justify-self: center;
+
+    flex-wrap: wrap-reverse;
+
     div {
-      width: 120px;
+      width: 110px;
+    }
+
+    .roomCode {
+      margin-top: 20px;
+
+      justify-content: center;
     }
   }
 }

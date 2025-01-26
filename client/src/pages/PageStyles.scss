@@ -1,12 +1,31 @@
 .game_container {
+  min-width: 650px;
+  width: 900px;
+
   position: relative;
 
-  flex-direction: column;
+  justify-self: center;
+
+  flex-wrap: wrap;
   align-items: center;
+
+  @media (max-width: 900px) {
+    width: 100%;
+  }
+
+  @media (max-width: 650px) {
+    min-width: 400px;
+
+    flex-direction: column-reverse;
+  }
+
+  @media (max-width: 450px) {
+    min-width: 350px;
+  }
 }
 
 .game_sub_container {
-  flex-wrap: wrap;
+  flex-direction: column;
 
   justify-content: center;
 }

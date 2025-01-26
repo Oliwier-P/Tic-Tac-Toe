@@ -4,6 +4,7 @@ import "./ScoreboardStyle.scss";
 export function Scoreboard() {
   return (
     <div className="scoreboard flex">
+      <div className="roomCode flex">Code: 72391</div>
       <Box info="X (You)" value="7" />
       <Box info="Draw" value="2" />
       <Box info="O (???)" value="5" />

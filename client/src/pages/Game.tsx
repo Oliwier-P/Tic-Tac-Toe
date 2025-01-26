@@ -22,10 +22,10 @@ export function Game() {
     <>
       <Header onClick={handleHome} />
       <div className="game_container flex">
-        <TurnContainer />
-        <GameBoard />
+        <Scoreboard />
         <div className="game_sub_container flex">
-          <Scoreboard />
+          <TurnContainer />
+          <GameBoard />
         </div>
       </div>
     </>
