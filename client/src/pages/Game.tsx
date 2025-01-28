@@ -6,7 +6,8 @@ import { Header } from "../components/Header/Header";
 import { GameBoard } from "../components/GameBoard/GameBoard";
 import { TurnContainer } from "../components/TurnContainer/TurnContainer";
 import { Scoreboard } from "../components/Scoreboard/Scoreboard";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { socket } from "../socket";
 
 export function Game() {
   // solo or onilne
