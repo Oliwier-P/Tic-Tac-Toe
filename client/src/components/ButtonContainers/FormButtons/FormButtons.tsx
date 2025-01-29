@@ -36,14 +36,16 @@ export function FormButtons() {
     }
 
     socket.emit("join_room", code, (response: string) => {
-      if (response == "join") {
-        navigate("/game");
-      }
-      if (response == "non-existent") {
-        alert(`Room "${code}" does not exist.`);
-      }
-      if (response == "full") {
-        alert(`Room is currently full.`);
+      switch (response) {
+        case "join":
+          navigate("/game");
+          break;
+        case "non-existent":
+          alert(`Room "${code}" does not exist.`);
+          break;
+        case "full":
+          alert(`Room is currently full.`);
+          break;
       }
     });
   };

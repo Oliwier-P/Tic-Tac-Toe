@@ -6,10 +6,23 @@
 
     font-weight: bold;
     font-size: 2rem;
+
+    cursor: pointer;
+
+    &:active {
+      transform: scale(90%);
+    }
   }
 
   div {
     margin: 20px 10px 0px 10px;
+
+    &:nth-child(3) {
+      color: var(--neutral);
+    }
+    &:nth-child(4) {
+      color: var(--easy);
+    }
   }
 
   @media (min-width: 651px) {

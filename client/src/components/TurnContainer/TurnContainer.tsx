@@ -1,12 +1,16 @@
 import "./TurnContainerStyle.scss";
 
-import { Box } from "../Box/TurnBox/Box";
+import { Box } from "../Box/InfoBox/Box";
 import { Reset } from "./Reset/Reset";
 
-export function TurnContainer() {
+type TurnContainerProps = {
+  turn: string;
+};
+
+export function TurnContainer({ turn }: TurnContainerProps) {
   return (
     <div className="turn_container flex">
-      <Box />
+      <Box info="Turn" value={turn} />
       <Reset onClick={() => {}} />
     </div>
   );

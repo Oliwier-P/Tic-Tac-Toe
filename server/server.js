@@ -43,6 +43,31 @@ io.on("connection", (socket) => {
 
     callback(roomExists);
   });
+
+  socket.on("check_connection", (status) => {
+    for (let [roomCode, usersInRoom] of roomData) {
+      if (usersInRoom.has(socket.id)) {
+        status(true, roomCode);
+      }
+    }
+
+    status(false);
+  });
+
+  socket.on("disconnect", () => {
+    for (let [roomCode, usersInRoom] of roomData) {
+      if (usersInRoom.has(socket.id)) {
+        for (user of usersInRoom) {
+          if (user == socket.id) {
+            socket.to(roomCode).emit("host_left", "Host left the game");
+          } else {
+            socket.to(roomCode).emit("user_left", "User left the game");
+          }
+          return;
+        }
+      }
+    }
+  });
 });
 
 server.listen(3000, () => {});

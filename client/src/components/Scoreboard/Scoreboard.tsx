@@ -1,13 +1,27 @@
-import { Box } from "../Box/InfoBox/Box";
 import "./ScoreboardStyle.scss";
 
-export function Scoreboard() {
+import { ScoreboardType } from "../../types/ScoreboardType";
+
+import { Box } from "../Box/InfoBox/Box";
+
+type ScoreboardProps = {
+  roomCode: number | null;
+  scoreboard: ScoreboardType;
+};
+
+export function Scoreboard({ roomCode, scoreboard }: ScoreboardProps) {
+  const CopyRoom = () => {
+    navigator.clipboard.writeText(`${roomCode!}`);
+  };
+
   return (
     <div className="scoreboard flex">
-      <div className="roomCode flex">Code: 72391</div>
-      <Box info="X (You)" value="7" />
-      <Box info="Draw" value="2" />
-      <Box info="O (???)" value="5" />
+      <div className="roomCode flex" onClick={CopyRoom}>
+        Code: {roomCode}
+      </div>
+      <Box info="X (You)" value={`${scoreboard.X}`} />
+      <Box info="Draw" value={`${scoreboard.draws}`} />
+      <Box info="O (???)" value={`${scoreboard.O}`} />
     </div>
   );
 }
