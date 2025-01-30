@@ -9,7 +9,7 @@ type HomeButtonProps = {
 
 export function HomeButton({ onClick }: HomeButtonProps) {
   return (
-    <button className="home_button" onClick={() => onClick("MODE")}>
+    <button className="home_button flex" onClick={() => onClick("MODE")}>
       <img src={home} />
     </button>
   );
