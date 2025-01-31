@@ -21,7 +21,7 @@ export function FormButtons() {
         if (exists) {
           attemptToCreateRoom();
         } else {
-          navigate("/game");
+          navigate("/game", { state: { gameMode: "ONILNE", difficulty: "NONE" } });
         }
       });
     };

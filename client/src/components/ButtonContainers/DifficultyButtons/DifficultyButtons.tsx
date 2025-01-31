@@ -7,8 +7,8 @@ import { Button } from "../../Button/Button";
 export function DifficultyButtons() {
   const navigate = useNavigate();
 
-  const handleStartGame = (mode: string) => {
-    navigate("/game");
+  const handleStartGame = (mode: string, difficulty: string) => {
+    navigate("/game", { state: { gameMode: mode, difficulty: difficulty } });
   };
 
   return (
@@ -17,19 +17,19 @@ export function DifficultyButtons() {
         text="Easy"
         width="180px"
         fontSize="1rem"
-        onClick={() => handleStartGame("easy")}
+        onClick={() => handleStartGame("AI", "EASY")}
       />
       <Button
         text="Medium"
         width="180px"
         fontSize="1rem"
-        onClick={() => handleStartGame("medium")}
+        onClick={() => handleStartGame("AI", "MEDIUM")}
       />
       <Button
         text="Hard"
         width="180px"
         fontSize="1rem"
-        onClick={() => handleStartGame("hard")}
+        onClick={() => handleStartGame("AI", "HARD")}
       />
     </div>
   );

@@ -48,6 +48,10 @@ io.on("connection", (socket) => {
     for (let [roomCode, usersInRoom] of roomData) {
       if (usersInRoom.has(socket.id)) {
         status(true, roomCode);
+
+        if (usersInRoom.size > 1) {
+          socket.nsp.to(roomCode).emit("start_game");
+        }
       }
     }
 
@@ -57,14 +61,14 @@ io.on("connection", (socket) => {
   socket.on("disconnect", () => {
     for (let [roomCode, usersInRoom] of roomData) {
       if (usersInRoom.has(socket.id)) {
-        for (user of usersInRoom) {
-          if (user == socket.id) {
-            socket.to(roomCode).emit("host_left", "Host left the game");
-          } else {
-            socket.to(roomCode).emit("user_left", "User left the game");
-          }
-          return;
+        if ([...usersInRoom][0] === socket.id) {
+          socket.to(roomCode).emit("host_left");
+          roomData.delete(roomCode);
+        } else {
+          socket.to(roomCode).emit("user_left");
+          usersInRoom.delete(socket.id);
         }
+        return;
       }
     }
   });

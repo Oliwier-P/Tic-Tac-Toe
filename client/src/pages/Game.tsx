@@ -2,6 +2,7 @@ import "./PageStyles.scss";
 
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 
 import { ScoreboardType } from "../types/ScoreboardType";
 import { GameDataType } from "../types/GameDataType";
@@ -16,9 +17,13 @@ import { EndGame } from "../components/EndGame/EndGame";
 import { socket } from "../socket";
 
 export function Game() {
+  const location = useLocation();
+  const gameMode = location.state?.gameMode || null;
+  const difficulty = location.state?.difficulty || null;
+
   const [gameData, setGameData] = useState<GameDataType>({
     roomCode: null,
-    status: "END",
+    status: "WAIT",
     turn: "O",
   });
   const [scoreboard, setScoreboard] = useState<ScoreboardType>({ X: 0, O: 0, draws: 0 });
@@ -36,16 +41,20 @@ export function Game() {
         handleHome();
       } else {
         setGameData((prev) => ({ ...prev, roomCode: code }));
+        console.log("Change to game");
       }
     });
   }, []);
 
   useEffect(() => {
-    socket.on("host_left", (response: string) => {
+    socket.on("host_left", () => {
       setGameData((prev) => ({ ...prev, status: "END" }));
     });
-    socket.on("user_left", (response: string) => {
+    socket.on("user_left", () => {
       setGameData((prev) => ({ ...prev, status: "WAIT" }));
+    });
+    socket.on("start_game", () => {
+      setGameData((prev) => ({ ...prev, status: "GAME" }));
     });
   }, [socket]);
 
