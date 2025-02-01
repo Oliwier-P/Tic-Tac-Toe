@@ -6,6 +6,7 @@ import { useLocation } from "react-router-dom";
 
 import { ScoreboardType } from "../types/ScoreboardType";
 import { GameDataType } from "../types/GameDataType";
+import { TurnType } from "../types/TurnType";
 
 import { Header } from "../components/Header/Header";
 import { GameBoard } from "../components/GameBoard/GameBoard";
@@ -17,44 +18,74 @@ import { EndGame } from "../components/EndGame/EndGame";
 import { socket } from "../socket";
 
 export function Game() {
+  const navigate = useNavigate();
   const location = useLocation();
+
   const gameMode = location.state?.gameMode || null;
   const difficulty = location.state?.difficulty || null;
+  const [currentTurn, setCurrentTurn] = useState<string | null>(
+    location.state?.currentTurn || null
+  );
 
+  const [scoreboard, setScoreboard] = useState<ScoreboardType>({ X: 0, O: 0, draws: 0 });
   const [gameData, setGameData] = useState<GameDataType>({
     roomCode: null,
-    status: "WAIT",
-    turn: "O",
+    status: gameMode == "AI" ? "GAME" : "WAIT",
+    turn: "X",
   });
-  const [scoreboard, setScoreboard] = useState<ScoreboardType>({ X: 0, O: 0, draws: 0 });
-
-  const navigate = useNavigate();
+  const [gameboard, setGameboard] = useState<string[]>([
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+  ]);
 
   const handleHome = () => {
     socket.disconnect();
     navigate("/");
   };
 
+  const handleMove = (id: number) => {
+    if (gameboard[id] !== "" || gameData.turn !== currentTurn) return;
+
+    // check win
+
+    const newTurn = gameData.turn == "X" ? "O" : "X";
+
+    socket.emit("change_turn", gameData.roomCode, newTurn);
+    socket.emit("update_gameboard", gameData.roomCode, id, currentTurn);
+  };
+
   useEffect(() => {
+    if (gameMode == "AI") return;
+
     socket.emit("check_connection", (status: boolean, code: number | null) => {
       if (!status) {
         handleHome();
       } else {
         setGameData((prev) => ({ ...prev, roomCode: code }));
-        console.log("Change to game");
       }
     });
   }, []);
 
   useEffect(() => {
-    socket.on("host_left", () => {
-      setGameData((prev) => ({ ...prev, status: "END" }));
+    socket.on("game_status", (response: "END" | "GAME" | "WAIT") => {
+      setGameData((prev) => ({ ...prev, status: response }));
     });
-    socket.on("user_left", () => {
-      setGameData((prev) => ({ ...prev, status: "WAIT" }));
+    socket.on("receive_turn", (turn: string) => {
+      setGameData((prev) => ({ ...prev, turn: turn }));
     });
-    socket.on("start_game", () => {
-      setGameData((prev) => ({ ...prev, status: "GAME" }));
+    socket.on("receive_gameboard", (id: number, sign: string) => {
+      setGameboard((prevBoard) => {
+        const newBoard = [...prevBoard];
+        newBoard[id] = sign;
+        return newBoard;
+      });
     });
   }, [socket]);
 
@@ -70,8 +101,8 @@ export function Game() {
             <div className="game_sub_container flex">
               {gameData.status == "GAME" && (
                 <>
-                  <TurnContainer turn={gameData.turn} />
-                  <GameBoard />
+                  <TurnContainer turn={gameData.turn} mode={gameMode} />
+                  <GameBoard gameboard={gameboard} onClick={handleMove} />
                 </>
               )}
               {gameData.status == "WAIT" && <Lobby />}

@@ -5,13 +5,14 @@ import { Reset } from "./Reset/Reset";
 
 type TurnContainerProps = {
   turn: string;
+  mode: "ONLINE" | "AI";
 };
 
-export function TurnContainer({ turn }: TurnContainerProps) {
+export function TurnContainer({ turn, mode }: TurnContainerProps) {
   return (
     <div className="turn_container flex">
       <Box info="Turn" value={turn} />
-      <Reset onClick={() => {}} />
+      {mode == "ONLINE" && <Reset onClick={() => {}} />}
     </div>
   );
 }

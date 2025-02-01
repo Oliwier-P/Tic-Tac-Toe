@@ -21,7 +21,9 @@ export function FormButtons() {
         if (exists) {
           attemptToCreateRoom();
         } else {
-          navigate("/game", { state: { gameMode: "ONILNE", difficulty: "NONE" } });
+          navigate("/game", {
+            state: { gameMode: "ONILNE", difficulty: "NONE", currentTurn: "X" },
+          });
         }
       });
     };
@@ -38,7 +40,9 @@ export function FormButtons() {
     socket.emit("join_room", code, (response: string) => {
       switch (response) {
         case "join":
-          navigate("/game");
+          navigate("/game", {
+            state: { gameMode: "ONILNE", difficulty: "NONE", currentTurn: "O" },
+          });
           break;
         case "non-existent":
           alert(`Room "${code}" does not exist.`);

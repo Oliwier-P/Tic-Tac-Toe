@@ -50,7 +50,7 @@ io.on("connection", (socket) => {
         status(true, roomCode);
 
         if (usersInRoom.size > 1) {
-          socket.nsp.to(roomCode).emit("start_game");
+          socket.nsp.to(roomCode).emit("game_status", "GAME");
         }
       }
     }
@@ -62,15 +62,23 @@ io.on("connection", (socket) => {
     for (let [roomCode, usersInRoom] of roomData) {
       if (usersInRoom.has(socket.id)) {
         if ([...usersInRoom][0] === socket.id) {
-          socket.to(roomCode).emit("host_left");
+          socket.to(roomCode).emit("game_status", "END");
           roomData.delete(roomCode);
         } else {
-          socket.to(roomCode).emit("user_left");
+          socket.to(roomCode).emit("game_status", "WAIT");
           usersInRoom.delete(socket.id);
         }
+
         return;
       }
     }
+  });
+
+  socket.on("change_turn", (roomCode, turn) => {
+    socket.nsp.to(roomCode).emit("receive_turn", turn);
+  });
+  socket.on("update_gameboard", (roomCode, id, sign) => {
+    socket.nsp.to(roomCode).emit("receive_gameboard", id, sign);
   });
 });
 

@@ -1,18 +1,17 @@
 import { Box } from "../Box/GameBox/Box";
 import "./GameBoardStyle.scss";
 
-export function GameBoard() {
+type GameboardProps = {
+  gameboard: string[];
+  onClick: (index: number) => void;
+};
+
+export function GameBoard({ gameboard, onClick }: GameboardProps) {
   return (
     <div className="game_board">
-      <Box />
-      <Box />
-      <Box />
-      <Box />
-      <Box />
-      <Box />
-      <Box />
-      <Box />
-      <Box />
+      {gameboard.map((box, index) => (
+        <Box key={index} value={box} onClick={() => onClick(index)} />
+      ))}
     </div>
   );
 }
