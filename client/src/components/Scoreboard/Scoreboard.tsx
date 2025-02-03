@@ -3,13 +3,15 @@ import "./ScoreboardStyle.scss";
 import { ScoreboardType } from "../../types/ScoreboardType";
 
 import { Box } from "../Box/InfoBox/Box";
+import { GameModeType } from "../../types/GameModeType";
 
 type ScoreboardProps = {
   roomCode: number | null;
   scoreboard: ScoreboardType;
+  mode: GameModeType;
 };
 
-export function Scoreboard({ roomCode, scoreboard }: ScoreboardProps) {
+export function Scoreboard({ roomCode, scoreboard, mode }: ScoreboardProps) {
   const CopyRoom = () => {
     navigator.clipboard.writeText(`${roomCode!}`);
   };
@@ -21,7 +23,7 @@ export function Scoreboard({ roomCode, scoreboard }: ScoreboardProps) {
       </div>
       <Box info="X (You)" value={`${scoreboard.X}`} />
       <Box info="Draw" value={`${scoreboard.draws}`} />
-      <Box info="O (???)" value={`${scoreboard.O}`} />
+      <Box info={`O (${mode == "AI" ? "AI" : "Player"})`} value={`${scoreboard.O}`} />
     </div>
   );
 }

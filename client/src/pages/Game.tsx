@@ -141,7 +141,11 @@ export function Game() {
           <EndGame onClick={handleHome} />
         ) : (
           <>
-            <Scoreboard roomCode={gameData.roomCode} scoreboard={scoreboard} />
+            <Scoreboard
+              roomCode={gameData.roomCode}
+              scoreboard={scoreboard}
+              mode={gameMode}
+            />
             <div className="game_sub_container flex">
               {gameData.status == "GAME" && (
                 <>
