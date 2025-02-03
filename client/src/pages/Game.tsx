@@ -66,17 +66,64 @@ export function Game() {
     return null;
   };
 
+  const newGame = (newTurn: TurnType) => {
+    setGameboard(() => ["", "", "", "", "", "", "", "", ""]);
+    setGameData((prevData) => ({ ...prevData, turn: newTurn }));
+  };
+
+  const updateGameData = async (boxId: number, boxSign: TurnType, turn: TurnType) => {
+    setGameData((prev) => ({ ...prev, turn: turn }));
+    setGameboard((prevBoard) => {
+      const newBoard = [...prevBoard];
+      newBoard[boxId] = boxSign;
+      return newBoard;
+    });
+  };
+
   const handleHome = () => {
     socket.disconnect();
     navigate("/");
   };
 
-  const handleMove = (id: number) => {
+  const difficultyMoveAI = () => {
+    switch (difficulty) {
+      case "EASY":
+        const emptySpots = gameboard.reduce<number[]>(
+          (acc, value, index) => (value === "" ? [...acc, index] : acc),
+          []
+        );
+        const randomIndex = Math.floor(Math.random() * emptySpots.length);
+
+        return emptySpots[randomIndex];
+      case "MEDIUM":
+        return 0;
+      case "HARD":
+        return 0;
+      default:
+        return 0;
+    }
+  };
+
+  const moveAI = async () => {
+    const selectedSpot: number = difficultyMoveAI();
+
+    setGameboard((prevBoard) => {
+      const newBoard = [...prevBoard];
+      newBoard[selectedSpot] = "O";
+      return newBoard;
+    });
+  };
+
+  const handleMove = async (id: number) => {
     if (gameboard[id] !== "" || gameData.turn !== currentTurn) return;
 
     const newTurn = gameData.turn == "X" ? "O" : "X";
 
-    socket.emit("update_gamedata", gameData.roomCode, id, currentTurn, newTurn);
+    if (gameMode === "AI") {
+      await updateGameData(id, gameData.turn, newTurn);
+    } else {
+      socket.emit("update_gamedata", gameData.roomCode, id, currentTurn, newTurn);
+    }
   };
 
   useEffect(() => {
@@ -96,21 +143,12 @@ export function Game() {
       setGameData((prev) => ({ ...prev, status: response }));
     });
 
-    socket.on("receive_gamedata", (id: number, sign: string, turn: "X" | "O") => {
-      setGameData((prev) => ({ ...prev, turn: turn }));
-      setGameboard((prevBoard) => {
-        const newBoard = [...prevBoard];
-        newBoard[id] = sign;
-        return newBoard;
-      });
+    socket.on("receive_gamedata", (id: number, sign: TurnType, turn: "X" | "O") => {
+      updateGameData(id, sign, turn);
     });
 
-    socket.on("receive_new_game", (newTurn: "X" | "O") => {
-      // gamevboard
-      setGameboard(() => ["", "", "", "", "", "", "", "", ""]);
-      // gamedata
-      setGameData((prevData) => ({ ...prevData, turn: newTurn }));
-      // update scoreboard
+    socket.on("receive_new_game", (newTurn: TurnType) => {
+      newGame(newTurn);
     });
   }, [socket]);
 
@@ -126,10 +164,18 @@ export function Game() {
         [key]: prevScore[key] + 1,
       }));
 
-      if (currentTurn === "X") {
+      if (gameMode === "AI") {
+        newGame("X");
+      } else if (currentTurn === "X") {
         const newTurn = gameWinner === "X" ? "O" : "X";
         socket.emit("new_game", gameData.roomCode, newTurn);
       }
+    } else if (gameMode === "AI" && gameData.turn === "O") {
+      setTimeout(() => {
+        moveAI().then(() => {
+          setGameData((prev) => ({ ...prev, turn: "X" }));
+        });
+      }, 1000);
     }
   }, [gameboard]);
 
