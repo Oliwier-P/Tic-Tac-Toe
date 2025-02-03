@@ -17,6 +17,17 @@ import { EndGame } from "../components/EndGame/EndGame";
 
 import { socket } from "../socket";
 
+const winningCombinations = [
+  [0, 1, 2], // Top row
+  [3, 4, 5], // Middle row
+  [6, 7, 8], // Bottom row
+  [0, 3, 6], // Left column
+  [1, 4, 7], // Middle column
+  [2, 5, 8], // Right column
+  [0, 4, 8], // Diagonal from top-left
+  [2, 4, 6], // Diagonal from top-right
+];
+
 export function Game() {
   const navigate = useNavigate();
   const location = useLocation();
@@ -45,6 +56,16 @@ export function Game() {
     "",
   ]);
 
+  const checkWinner = (board: string[]): TurnType | null => {
+    for (let combination of winningCombinations) {
+      const [a, b, c] = combination;
+      if (board[a] && board[a] === board[b] && board[a] === board[c]) {
+        return board[a] as TurnType;
+      }
+    }
+    return null;
+  };
+
   const handleHome = () => {
     socket.disconnect();
     navigate("/");
@@ -53,12 +74,9 @@ export function Game() {
   const handleMove = (id: number) => {
     if (gameboard[id] !== "" || gameData.turn !== currentTurn) return;
 
-    // check win
-
     const newTurn = gameData.turn == "X" ? "O" : "X";
 
-    socket.emit("change_turn", gameData.roomCode, newTurn);
-    socket.emit("update_gameboard", gameData.roomCode, id, currentTurn);
+    socket.emit("update_gamedata", gameData.roomCode, id, currentTurn, newTurn);
   };
 
   useEffect(() => {
@@ -77,17 +95,43 @@ export function Game() {
     socket.on("game_status", (response: "END" | "GAME" | "WAIT") => {
       setGameData((prev) => ({ ...prev, status: response }));
     });
-    socket.on("receive_turn", (turn: string) => {
+
+    socket.on("receive_gamedata", (id: number, sign: string, turn: "X" | "O") => {
       setGameData((prev) => ({ ...prev, turn: turn }));
-    });
-    socket.on("receive_gameboard", (id: number, sign: string) => {
       setGameboard((prevBoard) => {
         const newBoard = [...prevBoard];
         newBoard[id] = sign;
         return newBoard;
       });
     });
+
+    socket.on("receive_new_game", (newTurn: "X" | "O") => {
+      // gamevboard
+      setGameboard(() => ["", "", "", "", "", "", "", "", ""]);
+      // gamedata
+      setGameData((prevData) => ({ ...prevData, turn: newTurn }));
+      // update scoreboard
+    });
   }, [socket]);
+
+  useEffect(() => {
+    const gameWinner: TurnType | null = checkWinner(gameboard);
+    const isDraw: boolean = gameboard.every((box) => box !== "");
+
+    if (gameWinner || isDraw) {
+      const key: keyof ScoreboardType = gameWinner ? gameWinner : "draws";
+
+      setScoreboard((prevScore) => ({
+        ...prevScore,
+        [key]: prevScore[key] + 1,
+      }));
+
+      if (currentTurn === "X") {
+        const newTurn = gameWinner === "X" ? "O" : "X";
+        socket.emit("new_game", gameData.roomCode, newTurn);
+      }
+    }
+  }, [gameboard]);
 
   return (
     <>

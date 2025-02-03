@@ -74,12 +74,15 @@ io.on("connection", (socket) => {
     }
   });
 
-  socket.on("change_turn", (roomCode, turn) => {
-    socket.nsp.to(roomCode).emit("receive_turn", turn);
+  socket.on("update_gamedata", (roomCode, id, sign, turn) => {
+    socket.nsp.to(roomCode).emit("receive_gamedata", id, sign, turn);
   });
-  socket.on("update_gameboard", (roomCode, id, sign) => {
-    socket.nsp.to(roomCode).emit("receive_gameboard", id, sign);
+
+  socket.on("new_game", (roomCode, newTurn) => {
+    socket.nsp.to(roomCode).emit("receive_new_game", newTurn);
   });
 });
 
-server.listen(3000, () => {});
+server.listen(3000, () => {
+  console.log("Server is running on http://localhost:3000");
+});
