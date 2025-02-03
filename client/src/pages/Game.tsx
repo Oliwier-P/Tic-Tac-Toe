@@ -86,17 +86,42 @@ export function Game() {
   };
 
   const difficultyMoveAI = () => {
+    const emptySpots = gameboard.reduce<number[]>(
+      (acc, value, index) => (value === "" ? [...acc, index] : acc),
+      []
+    );
+
+    const randomIndex = Math.floor(Math.random() * emptySpots.length);
+
     switch (difficulty) {
       case "EASY":
-        const emptySpots = gameboard.reduce<number[]>(
-          (acc, value, index) => (value === "" ? [...acc, index] : acc),
-          []
-        );
-        const randomIndex = Math.floor(Math.random() * emptySpots.length);
-
+        // Make random move
         return emptySpots[randomIndex];
       case "MEDIUM":
-        return 0;
+        // Check if AI can win in the next move
+        for (let move of emptySpots) {
+          const tempBoard = [...gameboard];
+
+          tempBoard[move] = "O";
+
+          if (checkWinner(tempBoard) === "O") {
+            return move;
+          }
+        }
+
+        // Check if the player ("X") is about to win, and block
+        for (let move of emptySpots) {
+          const tempBoard = [...gameboard];
+
+          tempBoard[move] = "X";
+
+          if (checkWinner(tempBoard) === "X") {
+            return move;
+          }
+        }
+
+        // Otherwise make random move
+        return emptySpots[randomIndex];
       case "HARD":
         return 0;
       default:
