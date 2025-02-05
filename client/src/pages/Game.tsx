@@ -59,6 +59,26 @@ export function Game() {
   const [winningSpots, setWinningSpots] = useState<number[] | null>([]);
   const [winner, setWinner] = useState<TurnType | null>(null);
 
+  const updateGameData = async (boxId: number, boxSign: TurnType, turn: TurnType) => {
+    setGameData((prev) => ({ ...prev, turn: turn }));
+    setGameboard((prevBoard) => {
+      const newBoard = [...prevBoard];
+      newBoard[boxId] = boxSign;
+      return newBoard;
+    });
+  };
+
+  const newGame = (newTurn: TurnType, spots: number[] | null) => {
+    setWinningSpots(() => spots ?? []);
+
+    setTimeout(() => {
+      setGameboard(() => ["", "", "", "", "", "", "", "", ""]);
+      setGameData((prevData) => ({ ...prevData, turn: newTurn }));
+      setWinningSpots(() => []);
+      setWinner(() => null);
+    }, 2000);
+  };
+
   const checkWinner = (
     board: string[]
   ): { winner: TurnType | null; spots: number[] | null } => {
@@ -69,31 +89,6 @@ export function Game() {
       }
     }
     return { winner: null, spots: null };
-  };
-
-  const newGame = (newTurn: TurnType, spots: number[] | null) => {
-    setWinningSpots(() => spots);
-
-    setTimeout(() => {
-      setGameboard(() => ["", "", "", "", "", "", "", "", ""]);
-      setGameData((prevData) => ({ ...prevData, turn: newTurn }));
-      setWinningSpots(() => []);
-      setWinner(() => null);
-    }, 2000);
-  };
-
-  const updateGameData = async (boxId: number, boxSign: TurnType, turn: TurnType) => {
-    setGameData((prev) => ({ ...prev, turn: turn }));
-    setGameboard((prevBoard) => {
-      const newBoard = [...prevBoard];
-      newBoard[boxId] = boxSign;
-      return newBoard;
-    });
-  };
-
-  const handleHome = () => {
-    socket.disconnect();
-    navigate("/");
   };
 
   const difficultyMoveAI = () => {
@@ -148,6 +143,11 @@ export function Game() {
       newBoard[selectedSpot] = "O";
       return newBoard;
     });
+  };
+
+  const handleHome = () => {
+    socket.disconnect();
+    navigate("/");
   };
 
   const handleMove = async (id: number) => {
