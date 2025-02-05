@@ -56,19 +56,30 @@ export function Game() {
     "",
   ]);
 
-  const checkWinner = (board: string[]): TurnType | null => {
+  const [winningSpots, setWinningSpots] = useState<number[] | null>([]);
+  const [winner, setWinner] = useState<TurnType | null>(null);
+
+  const checkWinner = (
+    board: string[]
+  ): { winner: TurnType | null; spots: number[] | null } => {
     for (let combination of winningCombinations) {
       const [a, b, c] = combination;
       if (board[a] && board[a] === board[b] && board[a] === board[c]) {
-        return board[a] as TurnType;
+        return { winner: board[a] as TurnType, spots: [a, b, c] };
       }
     }
-    return null;
+    return { winner: null, spots: null };
   };
 
-  const newGame = (newTurn: TurnType) => {
-    setGameboard(() => ["", "", "", "", "", "", "", "", ""]);
-    setGameData((prevData) => ({ ...prevData, turn: newTurn }));
+  const newGame = (newTurn: TurnType, spots: number[] | null) => {
+    setWinningSpots(() => spots);
+
+    setTimeout(() => {
+      setGameboard(() => ["", "", "", "", "", "", "", "", ""]);
+      setGameData((prevData) => ({ ...prevData, turn: newTurn }));
+      setWinningSpots(() => []);
+      setWinner(() => null);
+    }, 2000);
   };
 
   const updateGameData = async (boxId: number, boxSign: TurnType, turn: TurnType) => {
@@ -104,7 +115,7 @@ export function Game() {
 
           tempBoard[move] = "O";
 
-          if (checkWinner(tempBoard) === "O") {
+          if (checkWinner(tempBoard).winner === "O") {
             return move;
           }
         }
@@ -115,7 +126,7 @@ export function Game() {
 
           tempBoard[move] = "X";
 
-          if (checkWinner(tempBoard) === "X") {
+          if (checkWinner(tempBoard).winner === "X") {
             return move;
           }
         }
@@ -140,7 +151,7 @@ export function Game() {
   };
 
   const handleMove = async (id: number) => {
-    if (gameboard[id] !== "" || gameData.turn !== currentTurn) return;
+    if (gameboard[id] !== "" || gameData.turn !== currentTurn || winner) return;
 
     const newTurn = gameData.turn == "X" ? "O" : "X";
 
@@ -172,17 +183,19 @@ export function Game() {
       updateGameData(id, sign, turn);
     });
 
-    socket.on("receive_new_game", (newTurn: TurnType) => {
-      newGame(newTurn);
+    socket.on("receive_new_game", (newTurn: TurnType, spots: number[] | null) => {
+      newGame(newTurn, spots);
     });
   }, [socket]);
 
   useEffect(() => {
-    const gameWinner: TurnType | null = checkWinner(gameboard);
+    const result = checkWinner(gameboard);
     const isDraw: boolean = gameboard.every((box) => box !== "");
 
-    if (gameWinner || isDraw) {
-      const key: keyof ScoreboardType = gameWinner ? gameWinner : "draws";
+    setWinner(() => result.winner);
+
+    if (result.winner || isDraw) {
+      const key: keyof ScoreboardType = result.winner ? result.winner : "draws";
 
       setScoreboard((prevScore) => ({
         ...prevScore,
@@ -190,10 +203,10 @@ export function Game() {
       }));
 
       if (gameMode === "AI") {
-        newGame("X");
+        newGame("X", result.spots);
       } else if (currentTurn === "X") {
-        const newTurn = gameWinner === "X" ? "O" : "X";
-        socket.emit("new_game", gameData.roomCode, newTurn);
+        const newTurn = result.winner === "X" ? "O" : "X";
+        socket.emit("new_game", gameData.roomCode, newTurn, result.spots);
       }
     } else if (gameMode === "AI" && gameData.turn === "O") {
       setTimeout(() => {
@@ -221,7 +234,11 @@ export function Game() {
               {gameData.status == "GAME" && (
                 <>
                   <TurnContainer turn={gameData.turn} mode={gameMode} />
-                  <GameBoard gameboard={gameboard} onClick={handleMove} />
+                  <GameBoard
+                    gameboard={gameboard}
+                    onClick={handleMove}
+                    winningSpots={winningSpots}
+                  />
                 </>
               )}
               {gameData.status == "WAIT" && <Lobby />}

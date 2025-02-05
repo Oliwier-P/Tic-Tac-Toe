@@ -78,8 +78,8 @@ io.on("connection", (socket) => {
     socket.nsp.to(roomCode).emit("receive_gamedata", id, sign, turn);
   });
 
-  socket.on("new_game", (roomCode, newTurn) => {
-    socket.nsp.to(roomCode).emit("receive_new_game", newTurn);
+  socket.on("new_game", (roomCode, newTurn, spots) => {
+    socket.nsp.to(roomCode).emit("receive_new_game", newTurn, spots);
   });
 });
 
