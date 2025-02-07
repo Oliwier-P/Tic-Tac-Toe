@@ -1,0 +1,47 @@
+body {
+  background-color: #23242a;
+}
+
+:root {
+  --background: #23242a;
+  --home-button-bg: #1a1b1c;
+
+  --primary: #ffffff;
+  --secondary: #00a86b;
+  --neutral: #878787;
+
+  --easy: #00a86b;
+  --medium: #ffa500;
+  --hard: #dc143c;
+
+  font-family: "Arial", sans-serif;
+}
+
+.flex {
+  display: flex;
+}
+
+@mixin button_style() {
+  width: 180px;
+
+  margin: 25px 0px 0px 0px;
+
+  font-weight: bold;
+
+  background-color: var(--secondary);
+  color: var(--primary);
+
+  padding: 15px 0px 15px 0px;
+
+  border: none;
+  border-radius: 10px;
+
+  cursor: pointer;
+}
+
+@mixin buttons_container() {
+  flex-direction: column;
+  align-items: center;
+
+  margin: 70px 0px 0px 0px;
+}

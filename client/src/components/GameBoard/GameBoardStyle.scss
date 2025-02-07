@@ -1,0 +1,15 @@
+.game_board {
+  width: 400px;
+  height: 400px;
+
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+
+  gap: 10px;
+  padding: 10px;
+
+  background-color: var(--home-button-bg);
+
+  border-radius: 20px;
+}

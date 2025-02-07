@@ -1,0 +1,14 @@
+.reset_button {
+  width: 60px;
+  height: 60px;
+
+  position: absolute;
+  right: 10px;
+
+  background-color: var(--home-button-bg);
+
+  border: none;
+  border-radius: 10px;
+
+  cursor: pointer;
+}

@@ -1,16 +1,25 @@
-import React from 'react'
-import {Link} from 'react-router-dom'
+import { useState } from "react";
 
-export default function Home() {
+import { ButtonsContainerType } from "../types/ButtonsContainersType";
+
+import { Header } from "../components/Header/Header";
+import { ModeButtons } from "../components/ButtonContainers/ModeButtons/ModeButtons";
+import { DifficultyButtons } from "../components/ButtonContainers/DifficultyButtons/DifficultyButtons";
+import { FormButtons } from "../components/ButtonContainers/FormButtons/FormButtons";
+
+export function Home() {
+  const [buttonsContainer, setButtonsContainer] = useState<ButtonsContainerType>("MODE");
+
+  const handleChangeButtons = (value: ButtonsContainerType) => {
+    setButtonsContainer(() => value);
+  };
+
   return (
     <>
-      <div className='title-gamemode'>
-        <span className='color-t'>Tic</span>-Tac-<span className='color-t'>Toe</span>
-      </div>
-      <div className='gamemode'>
-        <Link className='link-gamemode' to="/singleplayer"><button className='btn-gamemode' >Singleplayer</button></Link>
-        <Link className='link-gamemode' to="/multiplayer"><button className='btn-gamemode' >Multiplayer</button></Link>
-      </div>
+      <Header onClick={handleChangeButtons} />
+      {buttonsContainer == "MODE" && <ModeButtons onClick={handleChangeButtons} />}
+      {buttonsContainer == "FORM" && <FormButtons />}
+      {buttonsContainer == "DIFFICULTY" && <DifficultyButtons />}
     </>
-  )
+  );
 }

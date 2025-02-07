@@ -1,0 +1,21 @@
+@use "../../../style.scss" as mixins;
+
+.difficulty_container {
+  @include mixins.buttons_container();
+
+  button {
+    @include mixins.button_style();
+
+    &:nth-child(1) {
+      background-color: var(--easy);
+    }
+
+    &:nth-child(2) {
+      background-color: var(--medium);
+    }
+
+    &:nth-child(3) {
+      background-color: var(--hard);
+    }
+  }
+}

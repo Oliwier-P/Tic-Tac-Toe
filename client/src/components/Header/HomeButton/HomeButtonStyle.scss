@@ -1,0 +1,19 @@
+.home_button {
+  width: 60px;
+  height: 60px;
+
+  justify-content: center;
+  align-items: center;
+
+  position: absolute;
+  left: 0;
+
+  margin: 10px 0px 0px 20px;
+
+  background-color: var(--home-button-bg);
+
+  border: none;
+  border-radius: 10px;
+
+  cursor: pointer;
+}
