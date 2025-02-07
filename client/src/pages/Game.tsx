@@ -99,37 +99,93 @@ export function Game() {
 
     const randomIndex = Math.floor(Math.random() * emptySpots.length);
 
+    const winOrBlock = () => {
+      // Check if AI can win in the next move
+      for (let move of emptySpots) {
+        const tempBoard = [...gameboard];
+
+        tempBoard[move] = "O";
+
+        if (checkWinner(tempBoard).winner === "O") {
+          return move;
+        }
+      }
+
+      // Check if the player ("X") is about to win, and block
+      for (let move of emptySpots) {
+        const tempBoard = [...gameboard];
+
+        tempBoard[move] = "X";
+
+        if (checkWinner(tempBoard).winner === "X") {
+          return move;
+        }
+      }
+    };
+
+    const minimax = (board: string[], depth: number, isMaximizing: boolean): number => {
+      const { winner } = checkWinner(board);
+      if (winner == "O") return 10 - depth;
+      if (winner == "X") return depth - 10;
+      if (board.every((cell) => cell !== "")) return 0;
+
+      // AI turn
+      if (isMaximizing) {
+        let bestScore = -Infinity;
+        for (let i = 0; i < board.length; i++) {
+          if (board[i] === "") {
+            board[i] = "O";
+            let score = minimax(board, depth + 1, false);
+            board[i] = "";
+            bestScore = Math.max(bestScore, score);
+          }
+        }
+        return bestScore;
+      }
+      // Player Turn
+      else {
+        let worstScore = Infinity;
+        for (let i = 0; i < board.length; i++) {
+          if (board[i] === "") {
+            board[i] = "X";
+            let score = minimax(board, depth + 1, true);
+            board[i] = "";
+            worstScore = Math.min(worstScore, score);
+          }
+        }
+        return worstScore;
+      }
+    };
+
     switch (difficulty) {
       case "EASY":
         // Make random move
         return emptySpots[randomIndex];
       case "MEDIUM":
-        // Check if AI can win in the next move
-        for (let move of emptySpots) {
-          const tempBoard = [...gameboard];
+        const moveWinOrBlock = winOrBlock();
 
-          tempBoard[move] = "O";
-
-          if (checkWinner(tempBoard).winner === "O") {
-            return move;
-          }
-        }
-
-        // Check if the player ("X") is about to win, and block
-        for (let move of emptySpots) {
-          const tempBoard = [...gameboard];
-
-          tempBoard[move] = "X";
-
-          if (checkWinner(tempBoard).winner === "X") {
-            return move;
-          }
-        }
+        if (moveWinOrBlock) return moveWinOrBlock;
 
         // Otherwise make random move
         return emptySpots[randomIndex];
       case "HARD":
-        return 0;
+        let bestMove = -1;
+        let bestScore = -Infinity;
+
+        for (let i = 0; i < gameboard.length; i++) {
+          if (gameboard[i] === "") {
+            gameboard[i] = "O"; // AI makes a move
+            let score = minimax(gameboard, 0, false);
+            gameboard[i] = ""; // Undo move
+
+            if (score > bestScore) {
+              bestScore = score;
+              bestMove = i;
+            }
+          }
+        }
+
+        return bestMove;
       default:
         return 0;
     }
