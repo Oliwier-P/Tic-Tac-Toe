@@ -67,12 +67,7 @@ export function FormButtons() {
   return (
     <div className="form_container flex">
       <div className="form flex ">
-        <Button
-          text="Join"
-          width="130px"
-          fontSize="1rem"
-          onClick={() => handleJoinRoom(roomCode!)}
-        />
+        <Button text="Join" width="130px" fontSize="1rem" onClick={() => handleJoinRoom(roomCode!)} />
         <Input width="130px" value={roomCode} onChange={handleChangeCode} />
         <Button text="Create" width="280px" fontSize="1rem" onClick={handleCreateRoom} />
       </div>
