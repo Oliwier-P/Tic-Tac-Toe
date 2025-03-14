@@ -12,7 +12,7 @@
   "main": "server.js",
   "scripts": {
     "test": "vitest",
-    "start": "nodemon server.js"
+    "dev": "node server.js"
   },
   "author": "",
   "license": "ISC",
