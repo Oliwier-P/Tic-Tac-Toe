@@ -3,6 +3,9 @@ const { createServer } = require("http");
 const { Server } = require("socket.io");
 const cors = require("cors");
 const { socketsHandlers } = require("./socketsHandler");
+const dotenv = require("dotenv");
+
+dotenv.config();
 
 const app = express();
 app.use(cors());
@@ -10,7 +13,7 @@ app.use(cors());
 const server = createServer(app);
 
 const io = new Server(server, {
-  cors: { origin: "http://localhost:5173" },
+  cors: { origin: process.env.CLIENT_ORIGIN || "http://localhost:5173" },
 });
 
 const handleModulesOnConnection = async (socket) => {
@@ -25,6 +28,8 @@ const handleModulesOnConnection = async (socket) => {
 
 io.on("connection", handleModulesOnConnection);
 
-server.listen(3000, () => {
+const PORT = process.env.PORT || 3000;
+
+server.listen(PORT, () => {
   console.log("Server is running on http://localhost:3000");
 });
