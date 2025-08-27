@@ -1,8 +1,8 @@
-# 🎮 Real-Time Tic-Tac-Toe Game 
+# Real-Time Tic-Tac-Toe Game 
 
 A real-time multiplayer Tic-Tac-Toe with 2 game modes AI & onilne, AI mode has 3 levels of difficulty Easy, Medium , Hard (Impossible)
 
-## 📂 Project Structure
+## Project Structure
 ```
 ├── client/                  # Frontend code (React)  
 │   ├── src/                 # Source files
@@ -25,7 +25,7 @@ A real-time multiplayer Tic-Tac-Toe with 2 game modes AI & onilne, AI mode has 3
 
 ```
 
-## 🚀 Getting Started 
+## Getting Started 
 
 Quick installation guide:
 
@@ -47,7 +47,7 @@ Run the development servers:
 npm run dev  
 ```
 
-## ⚙️ Environment Variables
+## Environment Variables
 Create ```.env``` file in ```server/```
 
 ```bash
@@ -55,7 +55,7 @@ PORT=3000
 CLIENT_ORIGIN=http://localhost:5173
 ```
 
-## ✅ Running Tests
+## Running Tests
 
 Tests for server side:
 
@@ -63,31 +63,31 @@ Tests for server side:
 npm run test
 ```
 
-## ✨ Features
+## Features
 - Styled box in top left corner is home button
 - If a player wins or ends in a draw, a new game will start in 2-3 seconds
 - Game is endless until the player decides to leave
 
-## 📷 Screenshots
+## Screenshots
 
-### 🏠 Homepage
+### Homepage
 
 ![image](https://github.com/user-attachments/assets/fbe3a881-17c9-4be2-85a2-4f1840737549)
 
-### 🎯 Difficulty
+### Difficulty
 
 ![image](https://github.com/user-attachments/assets/83434e84-b764-4d98-8dac-8e7b37fca54d)
 
-### 📝 Create or Join a Room
+### Create or Join a Room
 
 ![image](https://github.com/user-attachments/assets/2697562b-e98d-4193-beee-f7ea8648b4bb)
 
-### 🎮 Game Room
+### Game Room
 
 ![image](https://github.com/user-attachments/assets/1a34be6e-fac9-4f15-88e2-ce730080450d)
 
 
-### 🛠️ Tech Stack
+### Tech Stack
 - Node.js
 - Express
 - Socket.IO
